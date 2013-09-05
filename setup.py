@@ -28,6 +28,7 @@ setup(
     zip_safe=False,
     install_requires=[
       'setuptools',
+      'p4a.subtyper',
       ],
     entry_points="""
       [z3c.autoinclude.plugin]

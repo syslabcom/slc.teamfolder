@@ -2,6 +2,11 @@
            xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
            i18n_domain="slc.teamfolder">
 
+  <utility
+      name="teamfolder"
+      factory=".subtyper.TeamFolderDescriptor"
+      />
+
   <genericsetup:registerProfile
       name="default"
       title="slc.teamfolder"
