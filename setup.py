@@ -8,7 +8,7 @@ setup(
     version=version,
     description="",
     long_description="\n".join((
-        open(os.path.join("docs", "README.rst")).read(),
+        open("README.rst").read(),
         open(os.path.join("docs", "CHANGES.rst")).read(),
     )),
     classifiers=[
