@@ -1,0 +1,4 @@
+.installed.cfg
+.mr.developer.cfg
+src/slc.teamfolder.egg-info
+*.pyc
