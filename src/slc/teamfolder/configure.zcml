@@ -1,6 +1,14 @@
 <configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
            xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
            i18n_domain="slc.teamfolder">
+
+   <browser:page
+       name="convert-to-teamfolder"
+       for="slc.teamfolder.subtyper.ITeamFolder"
+       class=".browser.convert_to_teamfolder.ConvertToTeamFolder"
+       permission="cmf.ManagePortal"
+       />
 
   <utility
       name="teamfolder"
@@ -12,6 +20,14 @@
       title="slc.teamfolder"
       directory="profiles/default"
       description=""
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
+  <genericsetup:registerProfile
+      name="testfixture"
+      title="slc.teamfolder testfixture"
+      directory="profiles/testfixture"
+      description="Dummy content for the test runner"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
 

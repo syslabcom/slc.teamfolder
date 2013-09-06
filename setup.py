@@ -27,11 +27,17 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-      'setuptools',
+      'plone.api',
       'p4a.subtyper',
+      'setuptools',
       ],
     entry_points="""
       [z3c.autoinclude.plugin]
       target = plone
     """,
+    extras_require={
+        'test': [
+            'plone.app.testing',
+        ],
+    },
     )
