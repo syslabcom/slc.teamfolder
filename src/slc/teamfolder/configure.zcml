@@ -3,16 +3,21 @@
            xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
            i18n_domain="slc.teamfolder">
 
-   <browser:page
-       name="convert-to-teamfolder"
-       for="slc.teamfolder.subtyper.ITeamFolder"
-       class=".browser.convert_to_teamfolder.ConvertToTeamFolder"
-       permission="cmf.ManagePortal"
-       />
+  <browser:page
+      name="convert-to-teamfolder"
+      for="slc.teamfolder.subtyper.ITeamFolder"
+      class=".browser.convert_to_teamfolder.ConvertToTeamFolder"
+      permission="cmf.ManagePortal"
+      />
 
   <utility
       name="teamfolder"
       factory=".subtyper.TeamFolderDescriptor"
+      />
+
+  <permission
+      id="slc.teamfolder.assignteam"
+      title="slc.teamfolder: Assign Team"
       />
 
   <genericsetup:registerProfile
