@@ -41,9 +41,16 @@ class TeamFolderLayer(PloneSandboxLayer):
         login(portal, TEST_USER_NAME)
 
         # Add some users
-        editor = api.user.create(email="editor@example.com", username="editor")
+        editor = api.user.create(
+            email="editor@example.com",
+            username="editor",
+            properties={"fullname": "An Editor"},
+        )
         contributor = api.user.create(
-            email="contributor@example.com", username="contributor")
+            email="contributor@example.com",
+            username="contributor",
+            properties={"fullname": "A Contributor"},
+        )
 
         # Grant local roles on the teamfolder
         portal = api.portal.get()

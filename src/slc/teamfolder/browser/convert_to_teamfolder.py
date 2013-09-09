@@ -1,7 +1,7 @@
 from Products.Five.browser import BrowserView
 from plone import api
 from zope.interface import Interface
-
+from slc.teamfolder.config import TEAMS
 
 class IConvertToTeamFolder(Interface):
     pass
@@ -9,7 +9,7 @@ class IConvertToTeamFolder(Interface):
 
 class ConvertToTeamFolder(BrowserView):
 
-    teams = ["Contributor", "Editor", "Viewer"]
+    teams = TEAMS
 
     def __call__(self):
         """Convert a standard Folder to a Team Folder

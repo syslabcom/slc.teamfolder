@@ -12,7 +12,6 @@ class TestConvertToTeamFolder(unittest.TestCase):
     layer = FUNCTIONAL_TESTING
 
     def setUp(self):
-        """"""
         self.portal = self.layer['portal']
         subtyper = getUtility(ISubtyper)
         subtyper.change_type(self.portal.teamfolder, "teamfolder")
