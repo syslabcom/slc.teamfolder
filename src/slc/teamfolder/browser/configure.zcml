@@ -1,0 +1,19 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           i18n_domain="slc.teamfolder">
+
+  <browser:page
+      name="convert-to-teamfolder"
+      for="slc.teamfolder.subtyper.ITeamFolder"
+      class=".convert_to_teamfolder.ConvertToTeamFolder"
+      permission="cmf.ManagePortal"
+      />
+
+  <browser:page
+      name="assign-team"
+      for="slc.teamfolder.subtyper.ITeamFolder"
+      class=".assign_team.AssignTeam"
+      permission="cmf.ManagePortal"
+      />
+
+</configure>
