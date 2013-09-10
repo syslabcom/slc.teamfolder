@@ -28,6 +28,7 @@ class ConvertToTeamFolder(BrowserView):
                 group = api.group.create(
                     groupname=group_id,
                     title=team+" Team for "+uuid,
+                    roles=[team],
                 )
             local_roles = self.context.__ac_local_roles__
             for username in local_roles.keys():

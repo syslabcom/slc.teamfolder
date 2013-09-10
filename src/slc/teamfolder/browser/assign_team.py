@@ -62,17 +62,8 @@ class AssignTeam(SharingView):
         """Customize to assign users to the relevant Teams rather than
         local_roles
 
-        new_settings is a list of dicts with keys id, for the user/group id;
-        type, being either 'user' or 'group'; and roles, containing the list
-        of role ids that are set.
-
-        Returns True if changes were made, or False if the new settings
-        are the same as the existing settings.
-
-[{'id': 'AuthenticatedUsers', 'roles': [], 'type': 'group'},
- {'id': 'usera', 'roles': [u'Contributor', u'Editor'], 'type': 'user'},
- {'id': 'userb', 'roles': [u'Contributor'], 'type': 'user'}]
-
+        The return value determines whether reindexing is triggered or
+        not. Only reindex when new groups are created.
         """
         changed = False
 
@@ -84,6 +75,7 @@ class AssignTeam(SharingView):
                 api.group.create(
                     groupname=team_id,
                     description=team+" Team for "+self.uuid,
+                    roles=[team],
                 )
                 group = api.group.get(groupname=team_id)
                 changed = True
