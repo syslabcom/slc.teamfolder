@@ -39,7 +39,7 @@
 
     <div id="content-core">
         <form method="post"
-              tal:attributes="action string:${context/absolute_url}/@@sharing">
+              tal:attributes="action string:${context/absolute_url}/@@assign-team">
 
             <input type="hidden" name="form.submitted:boolean" value="True" />
 

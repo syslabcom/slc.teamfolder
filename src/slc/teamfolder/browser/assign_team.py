@@ -4,8 +4,11 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from collections import defaultdict
 from plone import api
 from plone.app.workflow.browser.sharing import SharingView
+from plone.memoize.instance import clearafter
 from plone.memoize.instance import memoize
 from slc.teamfolder.config import TEAMS
+
+import transaction
 
 
 class AssignTeam(SharingView):
@@ -15,6 +18,10 @@ class AssignTeam(SharingView):
 
     template = ViewPageTemplateFile('templates/assign_team.pt')
 
+    def __init__(self, context, request):
+        super(AssignTeam, self).__init__(context, request)
+        self.uuid = api.content.get_uuid(obj=context)
+
     @memoize
     def existing_role_settings(self):
         """Return a data structure which mimics the one returned by the
@@ -22,12 +29,9 @@ class AssignTeam(SharingView):
         looking up the members of the folder specific groups (teams)
         rather than looking at the local or inherited roles.
         """
-        context = self.context
-        uuid = api.content.get_uuid(obj=context)
-
         member_roles = defaultdict(list)
         for team in TEAMS:
-            team_id = uuid+"-"+team.lower()
+            team_id = self.uuid+"-"+team.lower()
             try:
                 members = api.user.get_users(groupname=team_id)
             except api.exc.GroupNotFoundError:
@@ -52,3 +56,41 @@ class AssignTeam(SharingView):
                 'roles': roles_dict(member_roles[member]),
             })
         return role_settings
+
+    @clearafter
+    def update_role_settings(self, new_settings, reindex=False):
+        """Customize to assign users to the relevant Teams rather than
+        local_roles
+
+        new_settings is a list of dicts with keys id, for the user/group id;
+        type, being either 'user' or 'group'; and roles, containing the list
+        of role ids that are set.
+
+        Returns True if changes were made, or False if the new settings
+        are the same as the existing settings.
+
+[{'id': 'AuthenticatedUsers', 'roles': [], 'type': 'group'},
+ {'id': 'usera', 'roles': [u'Contributor', u'Editor'], 'type': 'user'},
+ {'id': 'userb', 'roles': [u'Contributor'], 'type': 'user'}]
+
+        """
+        changed = False
+
+        # Clear the Teams, and create them if they don't already exist
+        for team in TEAMS:
+            team_id = self.uuid+"-"+team.lower()
+            group = api.group.get(groupname=team_id)
+            if not group:
+                api.group.create(
+                    groupname=team_id,
+                    description=team+" Team for "+self.uuid,
+                )
+                group = api.group.get(groupname=team_id)
+                changed = True
+            for user in api.user.get_users(group=group):
+                api.group.remove_user(user=user, group=group)
+            for new_user in new_settings:
+                if team in new_user['roles']:
+                    api.group.add_user(username=new_user['id'], group=group)
+        transaction.commit()
+        return changed

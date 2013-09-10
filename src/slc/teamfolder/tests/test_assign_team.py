@@ -34,3 +34,17 @@ class TestConvertToTeamFolder(unittest.TestCase):
         }
         self.assertIn(
             contributor, self.assign_team_view.existing_role_settings())
+
+    def test_update_role_settings(self):
+        new_settings = [{
+            'id': 'editor',
+            'roles': [u'Contributor'],
+            'type': 'user',
+        }]
+        self.assign_team_view.update_role_settings(new_settings)
+        editor_group = api.group.get(groupname=self.teamfolder_uuid+"-editor")
+        contributor_group = api.group.get(
+            groupname=self.teamfolder_uuid+"-contributor")
+        editor = api.user.get(username="editor")
+        self.assertIn(editor, api.user.get_users(group=contributor_group))
+        self.assertNotIn(editor, api.user.get_users(group=editor_group))
