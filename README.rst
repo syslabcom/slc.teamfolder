@@ -16,8 +16,8 @@ Implementation
 
 slc.teamfolder uses p4a.subtyper to allow a folder to be changed into
 a "Team Folder". Upon conversion three groups are created which
-correspond to the Contributor, Editor and Viewer local roles. Users
-which have been assigned the equivalent local roles will be added to
-the relevant groups and then removed from the local roles. Additional
-users can be added to these groups in the same way as users can be
-assigned local roles in the sharing tab.
+correspond to the Contributor, Editor, Reviewer and Reader local
+roles. Users which have been assigned the equivalent local roles will
+be added to the relevant groups and then removed from the local
+roles. Additional users can be added to these groups in the same way
+as users can be assigned local roles in the sharing tab.
