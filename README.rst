@@ -2,6 +2,10 @@
  slc.teamfolder: assign users to folder specific groups instead of using local roles
 =====================================================================================
 
+.. image:: https://api.travis-ci.org/syslabcom/slc.teamfolder.png
+    :target: http://travis-ci.org/syslabcom/slc.teamfolder
+
+
 Changing the local_roles of a top level folder causes all sub-items to
 be re-indexed. On a large site this can be a significant performance
 issue.
