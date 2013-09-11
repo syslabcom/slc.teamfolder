@@ -14,6 +14,11 @@
       title="slc.teamfolder: Assign Team"
       />
 
+  <permission
+      id="slc.teamfolder.convert"
+      title="slc.teamfolder: Convert to TeamFolder"
+      />
+
   <genericsetup:registerProfile
       name="default"
       title="slc.teamfolder"

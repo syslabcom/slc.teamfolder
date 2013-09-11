@@ -36,7 +36,7 @@ class TeamFolderLayer(PloneSandboxLayer):
         # Create test content
         self.applyProfile(portal, 'slc.teamfolder:testfixture')
 
-        # Login as contributor
+        # Login as Manager
         setRoles(portal, TEST_USER_ID, ['Manager'])
         login(portal, TEST_USER_NAME)
 

@@ -26,8 +26,8 @@
 
     <h1 class="documentFirstHeading"
         i18n:translate="heading_currently_assigned_shares">
-        Sharing for
-        <q tal:content="context/Title" i18n:name="folder">title</q>
+      Teams for
+      <q tal:content="context/Title" i18n:name="folder">title</q>
     </h1>
 
     <div class="documentDescription"
@@ -36,6 +36,16 @@
     </div>
 
     <div tal:replace="structure provider:plone.abovecontentbody" tal:condition="not:ajax_load" />
+
+    <dl class="portalMessage info" tal:condition="view/can_convert">
+      <dt>Info</dt>
+      <dd>This folder has not yet been fully converted to a
+      TeamFolder. If it contains many items it may take a very long
+      time to convert and can instead be performed by the site
+      administrator with a script. Otherwise, you may <a
+      href="@@convert-to-teamfolder">convert this folder to a
+      teamfolder</a>.</dd>
+    </dl>
 
     <div id="content-core">
         <form method="post"

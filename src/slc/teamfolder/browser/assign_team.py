@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.statusmessages.interfaces import IStatusMessage
 from collections import defaultdict
 from plone import api
 from plone.app.workflow.browser.sharing import SharingView
 from plone.memoize.instance import clearafter
 from plone.memoize.instance import memoize
 from slc.teamfolder.config import TEAMS
+from zope.security import checkPermission
 
 import transaction
 
@@ -86,3 +88,20 @@ class AssignTeam(SharingView):
                     api.group.add_user(username=new_user['id'], group=group)
         transaction.commit()
         return changed
+
+    @property
+    def can_convert(self):
+        """We know the folder hasn't been converted if corresponding folder
+        groups don't exist. If this is the case, and the user has
+        permission they can convert the Folder
+        """
+        has_group_folders = True
+        for team in TEAMS:
+            team_id = self.uuid+"-"+team.lower()
+            if not api.group.get(team_id):
+                has_group_folders = False
+                break
+
+        has_permission = checkPermission(
+            'slc.teamfolder.convert', self.context)
+        return not has_group_folders and has_permission

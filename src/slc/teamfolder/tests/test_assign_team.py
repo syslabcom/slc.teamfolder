@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from Products.Five.security import newInteraction
 from p4a.subtyper.interfaces import ISubtyper
 from plone import api
+from plone.app.testing import TEST_USER_NAME
+from plone.app.testing import login
 from slc.teamfolder.tests.base import FUNCTIONAL_TESTING
 from zope.component import getUtility
 
@@ -20,6 +23,12 @@ class TestConvertToTeamFolder(unittest.TestCase):
         teamfolder = self.portal.teamfolder
         self.teamfolder_uuid = api.content.get_uuid(obj=teamfolder)
         self.assign_team_view = teamfolder.unrestrictedTraverse("assign-team")
+        sub_folder = teamfolder.subfolder1
+        subtyper.change_type(sub_folder, "teamfolder")
+        self.unconverted_assign_team_view = sub_folder.unrestrictedTraverse(
+            "assign-team")
+        # Create an interaction, so that we can use checkPermission
+        newInteraction()
 
     def test_existing_role_settings(self):
         contributor = {
@@ -48,3 +57,13 @@ class TestConvertToTeamFolder(unittest.TestCase):
         editor = api.user.get(username="editor")
         self.assertIn(editor, api.user.get_users(group=contributor_group))
         self.assertNotIn(editor, api.user.get_users(group=editor_group))
+
+    def test_editor_cannot_convert(self):
+        login(self.portal, "editor")
+        self.assertFalse(self.unconverted_assign_team_view.can_convert)
+
+    def test_manager_can_convert(self):
+        self.assertTrue(self.unconverted_assign_team_view.can_convert)
+
+    def test_manager_cannot_convert_already_converted(self):
+        self.assertFalse(self.assign_team_view.can_convert)
