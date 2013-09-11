@@ -12,6 +12,10 @@ class ConvertToTeamFolder(BrowserView):
     teams = TEAMS
 
     def __call__(self):
+        self.perform_conversion()
+        self.request.response.redirect("@@assign-team")
+
+    def perform_conversion(self):
         """Convert a standard Folder to a Team Folder
 
         Create three groups for the folder corresponding to
