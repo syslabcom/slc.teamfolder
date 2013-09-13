@@ -41,8 +41,20 @@ class TestConvertToTeamFolder(unittest.TestCase):
                       u'Reader': False},
             'title': 'A Contributor',
         }
+        interns = {
+            'disabled': False,
+            'type': 'group',
+            'id': 'Interns',
+            'roles': {u'Contributor': False,
+                      u'Reviewer': False,
+                      u'Editor': True,
+                      u'Reader': False},
+            'title': 'Interns',
+        }
         self.assertIn(
             contributor, self.assign_team_view.existing_role_settings())
+        self.assertIn(
+            interns, self.assign_team_view.existing_role_settings())
 
     def test_update_role_settings(self):
         new_settings = [{
@@ -58,6 +70,24 @@ class TestConvertToTeamFolder(unittest.TestCase):
         self.assertIn(editor, api.user.get_users(group=contributor_group))
         self.assertNotIn(editor, api.user.get_users(group=editor_group))
         self.assertTrue(editor.has_role(
+            'Contributor',
+            object=self.portal.teamfolder))
+
+    def test_update_role_settings_group(self):
+        new_settings = [{
+            'id': 'Interns',
+            'roles': [u'Contributor'],
+            'type': 'group',
+        }]
+        self.assign_team_view.update_role_settings(new_settings)
+        editor_group = api.group.get(groupname=self.teamfolder_uuid+"-editor")
+        contributor_group = api.group.get(
+            groupname=self.teamfolder_uuid+"-contributor")
+        interns = api.group.get(groupname="Interns")
+        an_intern = api.user.get(username="intern")
+        self.assertIn(interns, contributor_group.getGroupMembers())
+        self.assertNotIn(interns, editor_group.getGroupMembers())
+        self.assertTrue(an_intern.has_role(
             'Contributor',
             object=self.portal.teamfolder))
 

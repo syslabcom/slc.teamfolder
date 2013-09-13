@@ -50,11 +50,17 @@ class AssignTeam(SharingView):
 
         role_settings = []
         for member in member_roles.keys():
+            if api.user.get(username=member):
+                title = api.user.get(username=member).getProperty("fullname")
+                membertype = 'user'
+            else:
+                title = api.group.get(groupname=member).getProperty("title")
+                membertype = 'group'
             role_settings.append({
                 'disabled': False,
                 'id': member,
-                'title': api.user.get(username=member).getProperty("fullname"),
-                'type': 'user',
+                'title': title,
+                'type': membertype,
                 'roles': roles_dict(member_roles[member]),
             })
         return role_settings
