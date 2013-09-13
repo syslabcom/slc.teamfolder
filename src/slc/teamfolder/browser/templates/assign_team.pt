@@ -55,7 +55,7 @@
 
             <div class="field">
                 <input type="text"
-                       id="sharing-user-group-search"
+                       id="assign-team-user-group-search"
                        size="30"
                        name="search_term"
                        title="Search for user or group"
@@ -65,7 +65,7 @@
                        value=""
                        />
                 <input type="submit"
-                       id="sharing-save-button"
+                       id="assign-team-save-button"
                        name="form.button.Search"
                        value="Search"
                        class="searchButton allowMultiSubmit"
