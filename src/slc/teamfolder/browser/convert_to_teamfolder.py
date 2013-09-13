@@ -38,11 +38,18 @@ class ConvertToTeamFolder(BrowserView):
             for username in local_roles.keys():
                 if team in local_roles[username]:
                     api.group.add_user(group=group, username=username)
-                    api.user.revoke_roles(
-                        username=username,
-                        roles=[team],
-                        obj=self.context,
-                    )
+                    if api.user.get(username=username):
+                        api.user.revoke_roles(
+                            username=username,
+                            roles=[team],
+                            obj=self.context,
+                        )
+                    else:
+                        api.group.revoke_roles(
+                            groupname=username,
+                            roles=[team],
+                            obj=self.context,
+                        )
             api.group.grant_roles(
                 groupname=group_id,
                 roles=[team],

@@ -51,11 +51,23 @@ class TeamFolderLayer(PloneSandboxLayer):
             username="contributor",
             properties={"fullname": "A Contributor"},
         )
+        an_intern = api.user.create(
+            email="intern@example.com",
+            username="intern",
+            properties={"fullname": "An Intern"},
+        )
+        # And a group
+        interns = api.group.create(
+            groupname='Interns',
+            title='Interns',
+        )
+        api.group.add_user(user=an_intern, group=interns)
 
         # Grant local roles on the teamfolder
         portal = api.portal.get()
         tf = portal.teamfolder
         api.user.grant_roles(username="editor", roles=["Editor"], obj=tf)
+        api.group.grant_roles(groupname="Interns", roles=["Editor"], obj=tf)
         api.user.grant_roles(
             username="contributor", roles=["Contributor"], obj=tf)
 
