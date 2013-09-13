@@ -57,6 +57,9 @@ class TestConvertToTeamFolder(unittest.TestCase):
         editor = api.user.get(username="editor")
         self.assertIn(editor, api.user.get_users(group=contributor_group))
         self.assertNotIn(editor, api.user.get_users(group=editor_group))
+        self.assertTrue(editor.has_role(
+            'Contributor',
+            object=self.portal.teamfolder))
 
     def test_editor_cannot_convert(self):
         login(self.portal, "editor")
@@ -67,3 +70,8 @@ class TestConvertToTeamFolder(unittest.TestCase):
 
     def test_manager_cannot_convert_already_converted(self):
         self.assertFalse(self.assign_team_view.can_convert)
+
+    def test_team_roles_are_not_global(self):
+        roles = api.group.get_roles(
+            groupname=self.teamfolder_uuid+"-contributor")
+        self.assertNotIn('Contributor', roles)

@@ -20,8 +20,8 @@ class ConvertToTeamFolder(BrowserView):
 
         Create three groups for the folder corresponding to
         Contributor, Editor and Viewer local roles. Add users who have
-        these local roles on the Folder to the relevant groups, then
-        clear the local roles and re-index.
+        these local roles on the Folder to the relevant groups,
+        clear the local roles, then give groups their corresponding local roles
 
         """
         uuid = api.content.get_uuid(obj=self.context)
@@ -32,7 +32,7 @@ class ConvertToTeamFolder(BrowserView):
                 group = api.group.create(
                     groupname=group_id,
                     title=team+" Team for "+uuid,
-                    roles=[team],
+                    roles=[],
                 )
             local_roles = self.context.__ac_local_roles__
             for username in local_roles.keys():
@@ -43,3 +43,8 @@ class ConvertToTeamFolder(BrowserView):
                         roles=[team],
                         obj=self.context,
                     )
+            api.group.grant_roles(
+                groupname=group_id,
+                roles=[team],
+                obj=self.context,
+            )
