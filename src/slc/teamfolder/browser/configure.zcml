@@ -16,4 +16,12 @@
       permission="cmf.ManagePortal"
       />
 
+    <browser:page
+        for="slc.teamfolder.subtyper.ITeamFolder"
+        class=".kss_assign_team.KSSAssignTeam"
+        name="updateSharingInfo"
+        attribute="updateSharingInfo"
+        permission="plone.DelegateRoles"
+      />
+
 </configure>
