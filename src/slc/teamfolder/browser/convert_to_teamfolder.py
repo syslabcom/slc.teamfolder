@@ -34,6 +34,11 @@ class ConvertToTeamFolder(BrowserView):
                     title=team+" Team for "+uuid,
                     roles=[],
                 )
+            api.group.grant_roles(
+                groupname=group_id,
+                roles=[team],
+                obj=self.context,
+            )
             local_roles = self.context.__ac_local_roles__
             for username in local_roles.keys():
                 if team in local_roles[username]:
@@ -50,8 +55,3 @@ class ConvertToTeamFolder(BrowserView):
                             roles=[team],
                             obj=self.context,
                         )
-            api.group.grant_roles(
-                groupname=group_id,
-                roles=[team],
-                obj=self.context,
-            )
