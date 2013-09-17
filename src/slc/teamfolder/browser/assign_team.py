@@ -24,6 +24,13 @@ class AssignTeam(SharingView):
         super(AssignTeam, self).__init__(context, request)
         self.uuid = api.content.get_uuid(obj=context)
 
+    def get_team_id(self, teamname):
+        return "{{{uuid}-{teamname}}}".format(
+            uuid=self.uuid, teamname=teamname.lower())
+
+    def get_team_title(self, teamname):
+        return "z {teamname} Team".format(teamname=teamname)
+
     @memoize
     def existing_role_settings(self):
         """Return a data structure which mimics the one returned by the
@@ -33,7 +40,7 @@ class AssignTeam(SharingView):
         """
         member_roles = defaultdict(list)
         for team in TEAMS:
-            team_id = self.uuid+"-"+team.lower()
+            team_id = self.get_team_id(team)
             try:
                 members = api.user.get_users(groupname=team_id)
             except api.exc.GroupNotFoundError:
@@ -77,12 +84,12 @@ class AssignTeam(SharingView):
 
         # Clear the Teams, and create them if they don't already exist
         for team in TEAMS:
-            team_id = self.uuid+"-"+team.lower()
+            team_id = self.get_team_id(team)
             group = api.group.get(groupname=team_id)
             if not group:
                 api.group.create(
                     groupname=team_id,
-                    description=team+" Team for "+self.uuid,
+                    description=self.get_team_title(team),
                     roles=[team],
                 )
                 group = api.group.get(groupname=team_id)
@@ -103,7 +110,7 @@ class AssignTeam(SharingView):
         """
         has_group_folders = True
         for team in TEAMS:
-            team_id = self.uuid+"-"+team.lower()
+            team_id = self.get_team_id(team)
             if not api.group.get(team_id):
                 has_group_folders = False
                 break
