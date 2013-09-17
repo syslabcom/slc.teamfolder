@@ -50,3 +50,5 @@ class ConvertToTeamFolder(BrowserView):
                    and username != group_id:
                     api.group.add_user(groupname=group_id, username=username)
                     local_roles[username].remove(team)
+                    if local_roles[username] == []:
+                        del local_roles[username]
