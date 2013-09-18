@@ -21,7 +21,6 @@ class TestConvertToTeamFolder(unittest.TestCase):
         self.portal.teamfolder.unrestrictedTraverse(
             "@@convert-to-teamfolder")()
         teamfolder = self.portal.teamfolder
-        self.teamfolder_uuid = api.content.get_uuid(obj=teamfolder)
         self.assign_team_view = teamfolder.unrestrictedTraverse("assign-team")
         sub_folder = teamfolder.subfolder1
         subtyper.change_type(sub_folder, "teamfolder")
@@ -63,9 +62,10 @@ class TestConvertToTeamFolder(unittest.TestCase):
             'type': 'user',
         }]
         self.assign_team_view.update_role_settings(new_settings)
-        editor_group = api.group.get(groupname=self.teamfolder_uuid+"-editor")
+        editor_group = api.group.get(
+            groupname=self.assign_team_view.get_team_id("Editor"))
         contributor_group = api.group.get(
-            groupname=self.teamfolder_uuid+"-contributor")
+            groupname=self.assign_team_view.get_team_id("Contributor"))
         editor = api.user.get(username="editor")
         self.assertIn(editor, api.user.get_users(group=contributor_group))
         self.assertNotIn(editor, api.user.get_users(group=editor_group))
@@ -80,9 +80,10 @@ class TestConvertToTeamFolder(unittest.TestCase):
             'type': 'group',
         }]
         self.assign_team_view.update_role_settings(new_settings)
-        editor_group = api.group.get(groupname=self.teamfolder_uuid+"-editor")
+        editor_group = api.group.get(
+            groupname=self.assign_team_view.get_team_id("Editor"))
         contributor_group = api.group.get(
-            groupname=self.teamfolder_uuid+"-contributor")
+            groupname=self.assign_team_view.get_team_id("Contributor"))
         interns = api.group.get(groupname="Interns")
         an_intern = api.user.get(username="intern")
         self.assertIn(interns, contributor_group.getGroupMembers())
@@ -103,5 +104,5 @@ class TestConvertToTeamFolder(unittest.TestCase):
 
     def test_team_roles_are_not_global(self):
         roles = api.group.get_roles(
-            groupname=self.teamfolder_uuid+"-contributor")
+            groupname=self.assign_team_view.get_team_id("Contributor"))
         self.assertNotIn('Contributor', roles)

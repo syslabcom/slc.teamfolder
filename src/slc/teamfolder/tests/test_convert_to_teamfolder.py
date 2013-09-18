@@ -14,18 +14,19 @@ class TestConvertToTeamFolder(unittest.TestCase):
     def setUp(self):
         self.portal = self.layer['portal']
         subtyper = getUtility(ISubtyper)
-        subtyper.change_type(self.portal.teamfolder, "teamfolder")
-        self.portal.teamfolder.unrestrictedTraverse(
-            "@@convert-to-teamfolder")()
-        self.teamfolder_uuid = api.content.get_uuid(obj=self.portal.teamfolder)
+        teamfolder = self.portal.teamfolder
+        subtyper.change_type(teamfolder, "teamfolder")
+        teamfolder.unrestrictedTraverse("@@convert-to-teamfolder")()
+        self.assign_team_view = teamfolder.unrestrictedTraverse("assign-team")
+
 
     def test_teams_are_created(self):
         contributor_team = api.group.get(
-            groupname=self.teamfolder_uuid+"-contributor")
+            groupname=self.assign_team_view.get_team_id("Contributor"))
         self.assertTrue(contributor_team is not None)
 
     def test_users_are_added_to_teams(self):
-        contributor_team_id = self.teamfolder_uuid+"-contributor"
+        contributor_team_id = self.assign_team_view.get_team_id("Contributor")
         contributor_group_ids = [
             i.getId() for i in api.group.get_groups(username="contributor")]
         self.assertTrue(contributor_team_id in contributor_group_ids)
